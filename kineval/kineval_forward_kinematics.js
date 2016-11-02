@@ -3,9 +3,9 @@
 
     KinEval | Kinematic Evaluator | forward kinematics
 
-    Implementation of robot kinematics, control, decision making, and dynamics 
+    Implementation of robot kinematics, control, decision making, and dynamics
         in HTML5/JavaScript and threejs
-     
+
     @author ohseejay / https://github.com/ohseejay / https://bitbucket.org/ohseejay
 
     Chad Jenkins
@@ -16,7 +16,7 @@
 
 |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| --*/
 
-kineval.robotForwardKinematics = function robotForwardKinematics () { 
+kineval.robotForwardKinematics = function robotForwardKinematics () {
 
     if (typeof kineval.buildFKTransforms === 'undefined') {
         textbar.innerHTML = "forward kinematics not implemented";
@@ -27,8 +27,8 @@ kineval.robotForwardKinematics = function robotForwardKinematics () {
     kineval.buildFKTransforms();
 }
 
-    // STENCIL: reference code alternates recursive traversal over 
-    //   links and joints starting from base, using following functions: 
+    // STENCIL: reference code alternates recursive traversal over
+    //   links and joints starting from base, using following functions:
     //     traverseFKBase
     //     traverseFKLink
     //     traverseFKJoint
@@ -85,6 +85,21 @@ kineval.traverseFKJoint = function traverse_forward_kinematics_joint(joint,paren
     var rotX = generate_rotation_matrix_X(joint.origin.rpy[0]);
     var rotY = generate_rotation_matrix_Y(joint.origin.rpy[1]);
     local_origin_xform = matrix_multiply(trans,matrix_multiply(matrix_multiply(rotZ, rotY),rotX));
+
+    if ((typeof joint.type === 'undefined')||(joint.type === 'revolute')||(joint.type === 'continuous')) {
+        current_quat = kineval.quaternionNormalize(kineval.quaternionFromAxisAngle([joint.axis[0],joint.axis[1],joint.axis[2]],joint.angle));
+        local_joint_xform = kineval.quaternionToRotationMatrix(current_quat);
+    }
+    else if (joint.type === 'prismatic') {
+        local_joint_xform = generate_translation_matrix(
+            joint.angle*joint.axis[0],
+            joint.angle*joint.axis[1],
+            joint.angle*joint.axis[2]
+        );
+    }
+    else local_joint_xform = generate_identity();
+
     joint.xform = matrix_multiply(current_xform,local_origin_xform);
+    joint.xform = matrix_multiply(joint.xform,local_joint_xform);
     kineval.traverseFKLink(robot.links[joint.child],matrix_copy(joint.xform));
 }

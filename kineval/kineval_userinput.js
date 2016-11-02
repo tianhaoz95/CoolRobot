@@ -9,7 +9,7 @@ kineval.initKeyEvents = function init_keyboard_events() {
 kineval.handleKeydown = function handle_keydown(keycode) {
     //console.log("handle_keydown: "+keycode);
     switch (keycode) { // h:72 j:74 k:75 l:76
-    case 74: // j 
+    case 74: // j
         kineval.changeActiveLinkDown();
         break;
     case 75: // k
@@ -89,7 +89,7 @@ kineval.handleUserInput = function user_input() {
 
             // increment index
             if ((keyboard.pressed("n"))&&(kineval.motion_plan_traversal_index<kineval.motion_plan.length-1)) {
-                kineval.motion_plan_traversal_index++; 
+                kineval.motion_plan_traversal_index++;
                 textbar.innerHTML = "moved robot forward along planned motion trajectory";
             }
             if ((keyboard.pressed("b"))&&(kineval.motion_plan_traversal_index>0)) {
@@ -107,9 +107,9 @@ kineval.handleUserInput = function user_input() {
     if ( keyboard.pressed("o") ) {
         kineval.params.update_pd = true;
         kineval.params.update_pd_clock = false;
-        kineval.params.update_pd_dance = false;
+        kineval.params.update_pd_dance = true;
     }
- 
+
     // execute PID controller to clock
     if ( keyboard.pressed("c") ) {
         kineval.params.update_pd = true;
@@ -119,28 +119,28 @@ kineval.handleUserInput = function user_input() {
     // textbar messages
     if (kineval.params.update_pd||kineval.params.persist_pd) {
         textbar.innerHTML = "joint servo controller has been invoked";
-        if (kineval.params.update_pd_clock) 
+        if (kineval.params.update_pd_clock)
             textbar.innerHTML += "<br>executing clock movement about each joint";
-        if (kineval.params.update_pd_dance) 
+        if (kineval.params.update_pd_dance)
             textbar.innerHTML += "<br>executing dance routine, pose " + kineval.params.dance_pose_index + " of " + kineval.params.dance_sequence_index.length;
     }
-    if (kineval.params.update_ik||kineval.params.persist_ik) { 
-        if (!kineval.params.trial_ik_random.execute) 
+    if (kineval.params.update_ik||kineval.params.persist_ik) {
+        if (!kineval.params.trial_ik_random.execute)
             textbar.innerHTML = "inverse kinematics controller has been invoked";
     }
-    if (kineval.params.generating_motion_plan) 
+    if (kineval.params.generating_motion_plan)
         textbar.innerHTML = "motion planner has been invoked in the background";
 
 
 
-    // incrment/decrement angle of active joint 
+    // incrment/decrement angle of active joint
     if ( keyboard.pressed("u") ) {
         textbar.innerHTML = "active joint is moving in positive direction";
-        robot.joints[kineval.params.active_joint].control += 0.01;  // add motion increment 
+        robot.joints[kineval.params.active_joint].control += 0.01;  // add motion increment
     }
     else if ( keyboard.pressed("i") ) {
         textbar.innerHTML = "active joint is moving in negative direction";
-        robot.joints[kineval.params.active_joint].control += -0.01;  // add motion increment 
+        robot.joints[kineval.params.active_joint].control += -0.01;  // add motion increment
     }
 
     // move robot base in the ground plane
@@ -195,27 +195,27 @@ kineval.handleUserInput = function user_input() {
         kineval.assignPoseSetpoint(3);
     else if (keyboard.pressed("3"))
         kineval.setPoseSetpoint(3);
-    if (keyboard.pressed("shift+4")) 
+    if (keyboard.pressed("shift+4"))
         kineval.assignPoseSetpoint(4);
-    else if (keyboard.pressed("4")) 
+    else if (keyboard.pressed("4"))
         kineval.setPoseSetpoint(4);
-    if (keyboard.pressed("shift+5")) 
+    if (keyboard.pressed("shift+5"))
         kineval.assignPoseSetpoint(5);
     else if (keyboard.pressed("5"))
         kineval.setPoseSetpoint(5);
-    if (keyboard.pressed("shift+6")) 
+    if (keyboard.pressed("shift+6"))
         kineval.assignPoseSetpoint(6);
     else if (keyboard.pressed("6"))
         kineval.setPoseSetpoint(6);
-    if (keyboard.pressed("shift+7")) 
+    if (keyboard.pressed("shift+7"))
         kineval.assignPoseSetpoint(7);
     else if (keyboard.pressed("7"))
         kineval.setPoseSetpoint(7);
     if (keyboard.pressed("shift+8"))
         kineval.assignPoseSetpoint(8);
-    else if (keyboard.pressed("8")) 
+    else if (keyboard.pressed("8"))
         kineval.setPoseSetpoint(8);
-    if (keyboard.pressed("shift+9")) 
+    if (keyboard.pressed("shift+9"))
         kineval.assignPoseSetpoint(9);
     else if (keyboard.pressed("9"))
         kineval.setPoseSetpoint(9);
@@ -250,7 +250,7 @@ kineval.handleUserInput = function user_input() {
 }
 
 kineval.displayHelp = function display_help () {
-        textbar.innerHTML = "kineval user interface commands" 
+        textbar.innerHTML = "kineval user interface commands"
             + "<br>mouse: rotate camera about robot base "
             + "<br>z/x : camera zoom with respect to base "
             + "<br>t : toggle starting point mode "
@@ -307,5 +307,3 @@ kineval.changeActiveLinkPrevious = function change_active_joint_previous() {
 
     textbar.innerHTML = kineval.params.active_joint + " is now the active joint";
 }
-
-

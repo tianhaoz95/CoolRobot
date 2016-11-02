@@ -1,15 +1,15 @@
 /*
 
      KinEval
-     Implementation of robot kinematics, control, decision making, and dynamics 
+     Implementation of robot kinematics, control, decision making, and dynamics
      in HTML5/JavaScript and threejs
-     
+
      @author ohseejay / https://github.com/ohseejay / https://bitbucket.org/ohseejay
 
 */
 
 kineval.initRobot = function initRobot() {
-        
+
     // ASSUME: robot kinematics are described separate js file (eg., "robot_urdf_example.js")
 
     // initialize and create threejs mesh objects for robot links
@@ -30,7 +30,7 @@ kineval.initRobotLinks = function initRobotLinks() {
     }
 
     // initialize controls for robot base link
-    robot.control = {xyz: [0,0,0], rpy:[0,0,0]}; 
+    robot.control = {xyz: [0,0,0], rpy:[0,0,0]};
 }
 
 kineval.initRobotJoints = function initRobotJoints() {
@@ -51,9 +51,9 @@ kineval.initRobotJoints = function initRobotJoints() {
         robot.joints[x].control = 0;
         robot.joints[x].servo = {};
     // STENCIL: set appropriate servo gains for arm setpoint control
-        robot.joints[x].servo.p_gain = 0;
+        robot.joints[x].servo.p_gain = 0.1;
         robot.joints[x].servo.p_desired = 0;
-        robot.joints[x].servo.d_gain = 0;
+        robot.joints[x].servo.d_gain = 0.01;
 
     // STENCIL: complete kinematic hierarchy of robot for convenience.
     //   robot description only specifies parent and child links for joints.
@@ -83,8 +83,3 @@ kineval.initRobotJoints = function initRobotJoints() {
     */
 
 }
-
-
-
-
-
