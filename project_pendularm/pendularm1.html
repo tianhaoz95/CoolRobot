@@ -1,8 +1,8 @@
 
 <!-- |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/| |\/|
 
-    Pendularm 1 simulation 
-        
+    Pendularm 1 simulation
+
     Example of 1 DOF dynamics and control in HTML5/JavaScript and threejs
 
     @author ohseejay / https://github.com/ohseejay / https://bitbucket.org/ohseejay
@@ -42,7 +42,7 @@
 // initialize threejs scene, user input, and robot kinematics
 init();
 
-// main animation loop maintained by threejs 
+// main animation loop maintained by threejs
 animate();
 
 
@@ -67,12 +67,12 @@ function init() {
     gravity = 9.81;  // Earth gravity
 
     // initialize pendulum PID servo gains
-    pendulum.servo = {kp:0.08, kd:0.02, ki:0.01};  // no control
+    pendulum.servo = {kp:20, kd:0.1, ki:1};  // no control
 
-    // initialize time and set timestep 
+    // initialize time and set timestep
     t = 0;
     dt = 0.05;  // default
- 
+
     // initialize method of numerical integration of dynamics
     //numerical_integrator = "euler";
     //numerical_integrator = "verlet";
@@ -124,7 +124,7 @@ function animate() {
     if (keyboard.pressed("4"))
         numerical_integrator = "runge-kutta";
 
-    // update servo desired state from user interaction 
+    // update servo desired state from user interaction
     if ( keyboard.pressed("e") )
         pendulum.desired += 0.05; // move the desired angle for the servo
     if ( keyboard.pressed("q") )
@@ -149,7 +149,7 @@ function animate() {
     if (keyboard.pressed("c"))
         servo_active_persist = !servo_active_persist;
 
-    // disable motor from user interaction 
+    // disable motor from user interaction
     if (keyboard.pressed("s")||!servo_active_persist) {
         pendulum.control = 0;
         accumulated_error = 0;
@@ -166,8 +166,8 @@ function animate() {
     if (numerical_integrator === "euler") {
 
     // STENCIL: a correct Euler integrator is REQUIRED for assignment
-        pendulum.angle_dot = pendulum.angle_dot + pendulum_acceleration(pendulum.angle, pendulum.control) * dt;
         pendulum.angle = pendulum.angle + pendulum.angle_dot * dt;
+        pendulum.angle_dot = pendulum.angle_dot + pendulum_acceleration(pendulum.angle, pendulum.control) * dt;
     }
     else if (numerical_integrator === "verlet") {
 
@@ -180,12 +180,21 @@ function animate() {
     else if (numerical_integrator === "velocity verlet") {
 
     // STENCIL: a correct velocity Verlet integrator is REQUIRED for assignment
+        var acceleration_save = pendulum_acceleration(pendulum.angle,
+                pendulum.control);
 
+        pendulum.angle = pendulum.angle + pendulum.angle_dot*dt + 0.5*pendulum_acceleration(pendulum.angle,
+                pendulum.control) * dt * dt;
+
+        var acceleration_new = pendulum_acceleration(pendulum.angle,
+                pendulum.control);
+
+        pendulum.angle_dot = pendulum.angle_dot + (acceleration_new + acceleration_save)/2*dt;
     }
     else if (numerical_integrator === "runge-kutta") {
 
     // STENCIL: Runge-Kutta 4 integrator
-    } 
+    }
     else {
         pendulum.angle_previous = pendulum.angle;
         pendulum.angle = (pendulum.angle+Math.PI/180)%(2*Math.PI);
@@ -199,24 +208,24 @@ function animate() {
     // advance time
     t = t + dt;
 
-    textbar.innerHTML = 
+    textbar.innerHTML =
         "System <br> " +
-        " t = " + t.toFixed(2) + 
-        " dt = " + dt.toFixed(2) + 
+        " t = " + t.toFixed(2) +
+        " dt = " + dt.toFixed(2) +
         "<br>" +
-        " integrator = " + numerical_integrator + 
+        " integrator = " + numerical_integrator +
         "<br>" +
-        " x = " + pendulum.angle.toFixed(2) + 
+        " x = " + pendulum.angle.toFixed(2) +
         "<br>" +
-        " x_dot = " + pendulum.angle_dot.toFixed(2) + 
+        " x_dot = " + pendulum.angle_dot.toFixed(2) +
         "<br>" +
-        " x_desired = " + pendulum.desired.toFixed(2) + 
+        " x_desired = " + pendulum.desired.toFixed(2) +
         "<br><br> Servo: " + servo_active_state + " <br> " +
         " u = " + pendulum.control.toFixed(2) +
         "<br>" +
-        " kp = " + pendulum.servo.kp.toFixed(2) + 
+        " kp = " + pendulum.servo.kp.toFixed(2) +
         "<br>" +
-        " kd = " + pendulum.servo.kd.toFixed(2) + 
+        " kd = " + pendulum.servo.kd.toFixed(2) +
         "<br>" +
         " ki = " + pendulum.servo.ki.toFixed(2) +
         "<br><br>  Pendulum <br> " +
@@ -260,20 +269,20 @@ function createScene() {
     camera.position.y = 1;
     camera.position.z = 4;
 
-    var light1 = new THREE.PointLight( 0xffffff, 0.3, 1000 ); 
-    light1.position.set( 10, 10, 10 ); 
+    var light1 = new THREE.PointLight( 0xffffff, 0.3, 1000 );
+    light1.position.set( 10, 10, 10 );
     scene.add( light1 );
 
-    var light2 = new THREE.PointLight( 0xffffff, 0.3, 1000 ); 
-    light2.position.set( 10, -10, 10 ); 
+    var light2 = new THREE.PointLight( 0xffffff, 0.3, 1000 );
+    light2.position.set( 10, -10, 10 );
     scene.add( light2 );
 
-    var light3 = new THREE.PointLight( 0xffffff, 0.3, 1000 ); 
-    light3.position.set( -10, -10, 10 ); 
+    var light3 = new THREE.PointLight( 0xffffff, 0.3, 1000 );
+    light3.position.set( -10, -10, 10 );
     scene.add( light3 );
 
-    var light4 = new THREE.PointLight( 0xffffff, 0.3, 1000 ); 
-    light4.position.set( -10, 10, 10 ); 
+    var light4 = new THREE.PointLight( 0xffffff, 0.3, 1000 );
+    light4.position.set( -10, 10, 10 );
     scene.add( light4 );
 
     // instantiate threejs renderer and its dimensions
@@ -370,5 +379,3 @@ function createScene() {
 </script>
 </body>
 </html>
-
-

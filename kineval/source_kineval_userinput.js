@@ -308,4 +308,3 @@ kineval.changeActiveLinkPrevious = function change_active_joint_previous() {
     textbar.innerHTML = kineval.params.active_joint + " is now the active joint";
 }
 
-
