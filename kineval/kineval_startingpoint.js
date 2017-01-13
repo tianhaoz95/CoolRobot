@@ -75,19 +75,39 @@ function startingPlaceholderAnimate() {
     // keyboard is threejs helper for reading keyboard state
     if (keyboard.pressed("x")) {
         textbar.innerHTML = "moving on up";  // make the pieces move up
+/* STENCIL START */ 
+        vert_offset += 0.1;
+/* STENCIL REPLACE START
     // STENCIL: update the vertical offset variable
+STENCIL REPLACE */ 
+/* STENCIL END */ 
     }
     else if (keyboard.pressed("z")) {
         textbar.innerHTML = "relax your mind, let your conscience be free";  // stop jittering the pieces
+/* STENCIL START */ 
+        jitter_radius = Math.max(jitter_radius-0.01,0);
+/* STENCIL REPLACE START
     // STENCIL: update the radius of the jittering
+STENCIL REPLACE */ 
+/* STENCIL END */ 
     }
     else if (keyboard.pressed("shift+1")) { 
         textbar.innerHTML = "get a move on";  // increase spacing
+/* STENCIL START */ 
+        global_spacing = Math.max(global_spacing+0.01,0);
+/* STENCIL REPLACE START
     // STENCIL: update the global spacing variable
+STENCIL REPLACE */ 
+/* STENCIL END */ 
     }
     else if (keyboard.pressed("1")) {
         textbar.innerHTML = "come together";  // decrease spacing
+/* STENCIL START */ 
+        global_spacing = Math.max(global_spacing-0.01,0);
+/* STENCIL REPLACE START
     // STENCIL: update the global spacing variable
+STENCIL REPLACE */ 
+/* STENCIL END */ 
     }
     else {
         // make the pieces jitter, and say something more interesting
@@ -142,5 +162,4 @@ function startingPlaceholderAnimate() {
     } 
 
 } 
-
 

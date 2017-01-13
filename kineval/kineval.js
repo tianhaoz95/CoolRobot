@@ -266,11 +266,7 @@ kineval.initParameters = function initParameters() {
 
     // initialize the active joint for user control
     kineval.params.active_link = robot.base;
-
-    if (typeof robot.links[kineval.params.active_link].children === 'undefined')
-        kineval.params.active_joint = Object.keys(robot.joints)[0] 
-    else
-        kineval.params.active_joint = robot.links[kineval.params.active_link].children[0];
+    kineval.params.active_joint = robot.links[kineval.params.active_link].children[0];
 
     // initialize pose setpoints and target setpoint
     kineval.setpoints = [];
@@ -977,5 +973,4 @@ function tempPointCloud() {
   } // chosenidx
 */  // normal computation
 }
-
 

@@ -83,4 +83,3 @@ function simpleApplyMatrix(obj,mat) {
 }
 
 
-

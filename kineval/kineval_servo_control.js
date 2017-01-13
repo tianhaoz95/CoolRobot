@@ -21,7 +21,23 @@ kineval.setpointDanceSequence = function execute_setpoints() {
     // if update not requested, exit routine
     if (!kineval.params.update_pd_dance) return; 
 
+/* STENCIL START */ 
+    var setpoint_reached = true;
+    for (x in robot.joints) {
+        if (Math.abs(robot.joints[x].angle-kineval.params.setpoint_target[x])>0.01)
+            setpoint_reached = false;
+    }
+
+    if (setpoint_reached) {
+        kineval.params.dance_pose_index = (kineval.params.dance_pose_index+1)%kineval.params.dance_sequence_index.length;
+    }
+    for (x in robot.joints) {
+        kineval.params.setpoint_target[x] = kineval.setpoints[kineval.params.dance_sequence_index[kineval.params.dance_pose_index]][x];
+    }
+/* STENCIL REPLACE START
     // STENCIL: implement FSM to cycle through dance pose setpoints
+STENCIL REPLACE */ 
+/* STENCIL END */ 
 }
 
 kineval.setpointClockMovement = function execute_clock() {
@@ -43,7 +59,27 @@ kineval.robotArmControllerSetpoint = function robot_pd_control () {
 
     kineval.params.update_pd = false; // if update requested, clear request and process setpoint control
 
-    // STENCIL: implement P servo controller over joints
-}
+/* STENCIL START */ 
+    var x;  
+    for (x in robot.joints) {
 
+        robot.joints[x].servo.p_desired = kineval.params.setpoint_target[x] 
+
+        // hacky check for angular discontinuity
+        if ((robot.joints[x].servo.p_desired < 0.4) && (robot.joints[x].angle > 2*Math.PI-0.4))
+            robot.joints[x].servo.p_desired += 2*Math.PI;
+        if ((robot.joints[x].angle < 0.4) && (robot.joints[x].servo.p_desired > 2*Math.PI-0.4))
+            robot.joints[x].servo.p_desired -= 2*Math.PI;
+
+        // proportional term
+        robot.joints[x].control += robot.joints[x].servo.p_gain * (robot.joints[x].servo.p_desired - robot.joints[x].angle);
+
+        // derivative term (!!commented out but angle_dot will be available with dyanmics)
+        //robot.joints[x].control += robot.joints[x].servo.d_gain * (robot.joints[x].servo.d_desired - robot.joints[x].angle_dot);
+    }
+/* STENCIL REPLACE START
+    // STENCIL: implement P servo controller over joints
+STENCIL REPLACE */ 
+/* STENCIL END */ 
+}
 
